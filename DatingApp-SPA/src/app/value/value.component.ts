@@ -14,15 +14,15 @@ export class ValueComponent implements OnInit {
   constructor(private http: HttpClient) { }
 
   ngOnInit() {
-    this.getValues();
+    // this.getValues();
   }
 
-  getValues() {
-    this.http.get('http://localhost:59429/api/values').subscribe(response => {
-      this.values = response;
-    // tslint:disable-next-line: no-shadowed-variable
-    }, error => {
-      console.log(error);
-    });
-  }
+  // getValues() {
+  //   this.http.get('http://localhost:59429/api/values/1').subscribe(response => {
+  //     this.values = response;
+  //   // tslint:disable-next-line: no-shadowed-variable
+  //   }, error => {
+  //     console.log(error);
+  //   });
+  //}
 }
