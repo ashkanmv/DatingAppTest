@@ -1,0 +1,54 @@
+<div class="card">
+  <div class="card-body">
+    <div *ngIf="message?.length === 0">
+      <p>هیچ پیامی وجود ندارد.. میتوانید مکالمه خود را از پایین صفحه شروع کنید</p>
+    </div>
+
+    <ul class="chat">
+      <li *ngFor="let messages of message">
+        <!-- به دیگران -->
+        <div *ngIf="messages.senderId == receiverId">
+          <span class="chat-img float-left">
+            <img src={{messages.senderPhotoUrl}} alt={{messages.senderKnownAs}} class="rounded-circle">
+          </span>
+          <div class="chat-body">
+            <div class="header">
+              <strong class="primary-font">{{messages.senderKnownAs}}</strong>
+              <small class="text-muted float-right">
+                <span class="fa fa-clock-o">{{messages.messageSent | timeAgo}}</span>
+              </small>
+            </div>
+            <p>{{messages.content}}</p>
+          </div>
+        </div>
+        <!-- به من -->
+        <div *ngIf="messages.senderId != receiverId">
+          <span class="chat-img float-right">
+            <img src={{messages.senderPhotoUrl}} alt={{messages.senderKnownAs}} class="rounded-circle">
+          </span>
+          <div class="chat-body">
+            <div class="header">
+              <small class="text-muted">
+                <span class="fa fa-clock-o">{{messages.messageSent | timeAgo}}</span>
+                <span *ngIf="!messages.isRead" class="text-danger">(خوانده نشده)</span>
+                <span *ngIf="messages.isRead" class="text-success">({{messages.dateRead | timeAgo}} خوانده شده)</span>
+              </small>
+              <strong class="primary-font float-right">{{messages.senderKnownAs}}</strong>
+            </div>
+            <p>{{messages.content}}</p>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
+  <div class="card-footer">
+    <form dir="rtl" #form="ngForm" (ngSubmit)="sendMessage()">
+      <div class="input-group">
+        <input type="text" name="content" [(ngModel)]="messageContent.content" class="form-control input-sm" placeholder="پیام شخصی خود را بنویسید" required>
+        <div class="input-group-append">
+          <button class="btn btn-primary" [disabled]="!form.valid">ارسال</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

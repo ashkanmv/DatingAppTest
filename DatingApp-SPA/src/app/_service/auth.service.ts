@@ -2,30 +2,45 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import { JwtHelperService } from '@auth0/angular-jwt';
+import { environment } from 'src/environments/environment';
+import { Router } from '@angular/router';
+import { User } from '../_models/User';
+import { Subject } from 'rxjs';
+import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 
 @Injectable({
   providedIn: 'root'
   })
   export class AuthService {
-  baseUrl = 'http://localhost:59429/api/auth/';
+  baseUrl = environment.apiUrl + 'auth/';
   helper = new JwtHelperService();
   decodedToken : any;
+  currentUser : User;
+  photoUrl = new BehaviorSubject<string>('../../assets/user.png');
+  currentPhotoUrl = this.photoUrl.asObservable();
 
-  constructor(private http : HttpClient) { }
+  constructor(private http : HttpClient,private router : Router) { }
 
-  onLogin(model : any){
-    return this.http.post(this.baseUrl + 'login' , model).pipe(
+  updateCurrentUrl(photoUrl : string){
+    this.photoUrl.next(photoUrl);
+  }
+
+  onLogin(user : User){
+    return this.http.post(this.baseUrl + 'login' , user).pipe(
       map((response:any)=> {
         const user = response;
         if(user){
           localStorage.setItem('token' , user.token);
+          localStorage.setItem('user', JSON.stringify(user.user))
           this.decodedToken = this.helper.decodeToken(user.token);
+          this.currentUser = user.user;
+          this.updateCurrentUrl(this.currentUser.photoUrl)
         };
       }))
   }
 
-  onRegister(model:any){
-    return this.http.post(this.baseUrl + 'register' , model)
+  onRegister(user : User){
+    return this.http.post(this.baseUrl + 'register' , user)
   };
 
   loggedIn(){

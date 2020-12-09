@@ -1,0 +1,58 @@
+<div class="container mt-4">
+    <div class="row">
+        <h1>{{user.knownAs}} حساب کاربری </h1>
+    </div>
+    <div class="row">
+        <div class="col-sm-4">
+            <div class="card">
+                <img src="{{user.photoUrl || '../../assets/user.png'}}" alt={{user.knownAs}} class="card-img-top img-thumbnail">
+                <div class="card-body">
+                    <div>
+                        <strong>موقعیت</strong>
+                        <p>{{user.city}},{{user.country}}</p>
+                    </div>
+                    <div>
+                        <strong>سن :</strong>
+                        <p>{{user.age}}</p>
+                    </div>
+                    <div>
+                        <strong>آخرین فعالیت :</strong>
+                        <p>{{user.lastActive | timeAgo}}</p>
+                    </div>
+                    <div>
+                        <strong>تاریخ عضویت :</strong>
+                        <p>{{user.created}}</p>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="btn-group d-flex">
+                        <button class="btn btn-primary w-100">لایک</button>
+                        <button class="btn btn-success w-100" (click)="selectTab(3)">پیام</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-8">
+            <div class="tab-panel">
+                <tabset class="member-tabset" #memberTabs>
+                    <tab heading="{{user.knownAs}} راجب">
+                        <h4>توضیحات</h4>
+                        <p>{{user.introduction}}</p>
+                        <h4>به دنبال </h4>
+                        <p>{{user.lookingFor}}</p>
+                    </tab>
+                    <tab heading="علایق">
+                        <h4>علایق</h4>
+                        <p>{{user.interests}}</p>
+                    </tab>
+                    <tab heading="عکس ها">
+                        <ngx-gallery [options]="galleryOptions" [images]="galleryImages"></ngx-gallery>
+                    </tab>
+                    <tab heading="پیام ها">
+                        <app-messageThread [receiverId]="user.id"></app-messageThread>
+                    </tab>
+                </tabset>
+            </div>
+        </div>
+    </div>
+</div>

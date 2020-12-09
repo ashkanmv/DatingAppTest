@@ -1,28 +1,117 @@
-<form #createUser="ngForm" (ngSubmit)="onSubmit()">
-  <h2 class="text-center text-primary">Sign Up</h2>
+<form dir="rtl" [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+  <h2 class="text-center text-primary">ثبت نام</h2>
   <hr>
 
   <div class="form-group">
+    <label class="control-label" style="margin-right:10px">جنسیت</label>
+    <label class="radio-inline">
+      <input type="radio" class="mr-3" value="male" formControlName="gender">مرد
+    </label>
+    <label class="radio-inline">
+      <input type="radio" class="mr-3" value="female" formControlName="gender">زن
+    </label>
+  </div>
+
+  <div class="form-group">
     <input
+    [ngClass]="{'is-invalid': registerForm.get('username').errors && registerForm.get('username').touched }"
+    formControlName="username"
     type="text"
     class="form-control"
     name="username"
-    required placeholder="Username"
-    [(ngModel)]="data.username">
+    placeholder="نام کاربری"
+    >
+    <div class="invalid-feedback" *ngIf="registerForm.get('username').hasError('required') && registerForm.get('username').touched">نام کاربری خود را وارد کنید</div>
   </div>
 
   <div class="form-group">
     <input
-    type="password"
+    [ngClass]="{'is-invalid': registerForm.get('knownAs').errors && registerForm.get('knownAs').touched}"
+    type="text"
+    formControlName="knownAs"
     class="form-control"
-    name="password"
-    required placeholder="Password"
-    [(ngModel)]="data.password">
+    name="knownAs"
+    placeholder="نام"
+    >
+    <div class="invalid-feedback" *ngIf="registerForm.get('knownAs').hasError('required') && registerForm.get('knownAs').touched">نام خود را وارد کنید</div>
   </div>
 
   <div class="form-group">
-    <button class="btn btn-success" type="submit">Submit</button>
-    <button class="btn btn-default" type="button" (click)="onCancel()">Cancel</button>
+    <input
+    #datepickerInput
+    formControlName="dateOfBirth"
+    type="text"
+    class="form-control"
+    name="dateOfBirth"
+    placeholder="تاریخ تولد"
+    >
+<ng-persian-datepicker
+  [input]="datepickerInput"
+  [timeEnable]='false'
+  dateFormat='jYYYY-jMM-jDD'></ng-persian-datepicker>
+  </div>
+
+  <div class="form-group">
+    <input
+    [ngClass]="{'is-invalid': registerForm.get('city').errors && registerForm.get('city').touched }"
+    formControlName="city"
+    type="text"
+    class="form-control"
+    name="city"
+    placeholder="شهر"
+    >
+    <div class="invalid-feedback" *ngIf="registerForm.get('city').hasError('required') && registerForm.get('city').touched">شهر خود را وارد کنید</div>
+  </div>
+
+  <div class="form-group">
+    <input
+    [ngClass]="{'is-invalid': registerForm.get('country').errors && registerForm.get('country').touched}"
+    formControlName="country"
+    type="text"
+    class="form-control"
+    name="country"
+    placeholder="کشور"
+    >
+    <div class="invalid-feedback" *ngIf="registerForm.get('country').hasError('required') && registerForm.get('country').touched">کشور خود را وارد کنید</div>
+  </div>
+
+
+  <div class="form-group">
+    <input
+    [ngClass]="{'is-invalid': registerForm.get('password').errors && registerForm.get('password').touched }"
+    formControlName="password"
+    type="password"
+    class="form-control"
+    name="password"
+    placeholder="گذرواژه"
+    >
+    <div class="invalid-feedback">
+      <div *ngIf="registerForm.get('password').hasError('required') && registerForm.get('password').touched">گذرواژه خود را وارد کنید </div>
+      <div *ngIf="registerForm.get('password').hasError('minlength') && registerForm.get('password').touched">گذرواژه باید حداقل 4 حرف باشد</div>
+      <div *ngIf="registerForm.get('password').hasError('maxlength') && registerForm.get('password').touched">گذرواژه نباید بیشتر از 8 حرف باشد</div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <input
+    [ngClass]="{'is-invalid': registerForm.get('confirmPassword').errors && registerForm.get('password').touched}"
+    formControlName="confirmPassword"
+    type="password"
+    class="form-control"
+    name="confirmPassword"
+    placeholder="تکرار گذرواژه"
+    >
+    <div class="invalid-feedback">
+      <div *ngIf="registerForm.get('confirmPassword').hasError('required') && registerForm.get('confirmPassword').touched">گذرواژه خود را دوباره وارد کنید</div>
+      <div *ngIf="registerForm.get('confirmPassword').hasError('mismatch') && registerForm.get('confirmPassword').touched">گذرواژه مطابقت ندارد</div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <button class="btn btn-success" type="submit" [disabled]='!registerForm.valid' >ثبت</button>
+    <button class="btn btn-default" type="button" (click)="onCancel()">بیخیال</button>
   </div>
 
 </form>
+<!-- <div class="invalid-feedback" *ngIf="f.dateOfBirth.touched && f.dateOfBirth.errors.required">تاریخ تولد خود را وارد کنید</div>
+[ngClass]="{'is-invalid': f.dateOfBirth.errors && f.dateOfBirth.touched }" -->

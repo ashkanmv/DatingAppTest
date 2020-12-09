@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../_service/auth.service';
 import { AlertifyService } from '../_service/alertify.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-nav',
@@ -9,27 +10,39 @@ import { AlertifyService } from '../_service/alertify.service';
 })
 export class NavComponent implements OnInit {
   model: any = {};
+  photoUrl: string;
 
-  constructor(public service : AuthService,private alertify : AlertifyService) { }
+  constructor(
+    public authService : AuthService,
+    private alertify : AlertifyService,
+    private router : Router) { }
 
   ngOnInit() {
-
+    this.authService.currentPhotoUrl.subscribe(newPhotoUrl=>{
+      this.photoUrl = newPhotoUrl;
+    })
   }
   login(){
-    this.service.onLogin(this.model).subscribe(next=>{
+    this.authService.onLogin(this.model).subscribe(next=>{
       this.alertify.success('موفق شدی');
     },error => {
-      this.alertify.error('ریدی')
+      this.alertify.error('نام کاربری یا گذرواژه اشتباه است')
+    },()=>{
+      this.router.navigate(['/member']);
     });
 }
   Logout(){
     localStorage.removeItem('token');
-    this.alertify.message("Logout")
+    localStorage.removeItem('user');
+    this.authService.decodedToken = null;
+    this.authService.currentUser = null;
+    this.alertify.message("خارج شدید");
+    this.router.navigate(['']);
+
 };
 
   loggedIn(){
-    const token = localStorage.getItem('token');
-    return !!token;
+    return this.authService.loggedIn();
   }
 
 }
